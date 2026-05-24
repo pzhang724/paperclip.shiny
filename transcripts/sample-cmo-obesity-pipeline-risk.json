@@ -1,0 +1,84 @@
+{
+  "id": "sample-cmo-obesity-pipeline-risk",
+  "title": "What strategic risks should we anticipate in the obesity drug class over the next 24 months?",
+  "subtitle": "Pipeline density, payer pressure, and emerging label restrictions",
+  "audience_tags": ["portfolio strategy"],
+  "estimated_duration_seconds": 270,
+  "description": "An agent runs parallel searches across pipeline literature, payer/access commentary, and FDA labeling discussions, counts active Phase 3 trials by sponsor, then synthesizes the risk picture grouped by stakeholder.",
+  "metadata": {
+    "tool_calls": 6,
+    "documents_read": 24,
+    "wall_clock_seconds": 258
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "What strategic risks should we anticipate in the obesity drug class over the next 24 months? I'm interested in pipeline density, payer pressure, and emerging label restrictions.",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "Three angles — pipeline competition, payer/access dynamics, and regulatory labeling. I'll run those three searches in parallel, then quantify pipeline density and synthesize.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip searches",
+      "args": "paperclip searches \\\n  \"obesity Phase 3 readout 2025 2026 sponsor\" \\\n  \"GLP-1 access coverage payer Medicare Part D\" \\\n  \"FDA obesity drug labeling restriction adolescent pregnancy\" \\\n  -n 20",
+      "delay_ms": 900
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Running 3 searches in parallel...\n\n  [1/3] \"obesity Phase 3 readout 2025 2026 sponsor\"\n        → 14 results  [s_ob_pipe]\n  [2/3] \"GLP-1 access coverage payer Medicare Part D\"\n        → 11 results  [s_ob_payer]\n  [3/3] \"FDA obesity drug labeling restriction adolescent pregnancy\"\n        → 8 results   [s_ob_label]\n\nMerged unique results: 31  [s_ob_risk]",
+      "delay_ms": 2200
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip sql",
+      "args": "SELECT COALESCE(NULLIF(SPLIT_PART(authors, ',', 1), ''), 'Unknown') AS lead_sponsor,\n       COUNT(*) AS active_ph3\nFROM documents\nWHERE source = 'trials/us'\n  AND article_type IN ('Phase 3', 'Phase 2/3')\n  AND pub_year >= 2023\n  AND abstract_text ILIKE '%obesity%'\nGROUP BY 1\nORDER BY active_ph3 DESC\nLIMIT 8;",
+      "delay_ms": 1200
+    },
+    {
+      "type": "tool_output",
+      "format": "code",
+      "content": "      lead_sponsor       | active_ph3\n-------------------------+------------\n Eli Lilly               |         11\n Novo Nordisk            |         10\n Boehringer Ingelheim    |          4\n Zealand Pharma          |          3\n AstraZeneca             |          3\n Amgen                   |          2\n Structure Therapeutics  |          2\n Viking Therapeutics     |          2\n(8 rows)",
+      "delay_ms": 1700
+    },
+    {
+      "type": "agent_thought",
+      "content": "Two dominant sponsors, a credible second tier, and small-cap entrants accelerating. Now the payer angle.",
+      "delay_ms": 800
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_ob_payer \\\n  \"contains substantive Medicare, Medicaid, commercial-payer, or PBM commentary on obesity drug coverage\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_ob_payer_f]\n\n  Kept 8 of 11 documents. Themes: PA criteria tightening (5),\n  IRA negotiation candidacy (3), employer plan exclusions (2),\n  CMS rule on obesity drug coverage (2).",
+      "delay_ms": 1300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_ob_risk \\\n  \"What is the principal risk this document raises for a sponsor in the obesity drug class over the next 24 months? Be specific.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 24/24 documents  [m_ob_risk]\n\n  ✓ Eli Lilly SURMOUNT-MMO design note\n    Risk: morbidity-mortality readout (~2027) will reset the\n    competitive bar; sponsors without a CV/morbidity arm in\n    their Ph3 program risk label disadvantage post-2027.\n\n  ✓ Novo SELECT extension analysis\n    Risk: durable CV benefit + class-wide pricing pressure\n    will narrow differentiation, push competition toward\n    safety profile and adherence rather than efficacy.\n\n  ✓ CMS obesity drug coverage discussion (2024)\n    Risk: Medicare Part D coverage tied to specific\n    cardiovascular or kidney indications; pure-weight\n    indications remain non-covered. Sponsors targeting\n    weight-only label face structural reimbursement gap.\n\n  ✓ IRA negotiation candidate analysis\n    Risk: semaglutide and tirzepatide both candidates for\n    early IRA negotiation rounds (2027–2028). Pricing\n    pressure cascades to all GLP-1s including pipeline\n    entrants once class-wide benchmarks are set.\n\n  ✓ FDA labeling — adolescent obesity safety\n    Risk: pediatric labeling under active review;\n    cardiometabolic benefit must be weighed against growth\n    and developmental signal monitoring.\n\n  ✓ Pfizer danuglipron discontinuation note\n    Risk: oral GLP-1 tolerability ceiling — multiple sponsors\n    have hit the same wall. Differentiated tolerability is\n    the next competitive frontier, not raw potency.\n\n  ... [18 additional risk items across the three axes]",
+      "delay_ms": 3000
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## Strategic risks in the obesity drug class — next 24 months\n\nThe class is moving from *first-wave demand expansion* (2022–2024) into a phase shaped by reimbursement gates, regulatory milestones, and competitive consolidation around comorbidity outcomes. Three risk categories deserve board attention.\n\n### Risk 1 — Pipeline density and the morbidity-mortality bar\n\nThe market is dominated by two sponsors, with a credible second tier already in Phase 3.\n\n| Sponsor | Active Ph3 / Ph2-3 (obesity) |\n| --- | ---: |\n| Eli Lilly | 11 |\n| Novo Nordisk | 10 |\n| Boehringer Ingelheim | 4 |\n| Zealand Pharma | 3 |\n| AstraZeneca | 3 |\n| Amgen / Structure / Viking | 2 each |\n\nThe **SURMOUNT-MMO readout (~2027)** is the inflection. Sponsors without a CV or morbidity-mortality arm in their Ph3 program will be at structural label disadvantage post-2027. Plan now or accept second-tier positioning.\n\n### Risk 2 — Payer and IRA pressure\n\n- **Medicare Part D coverage is comorbidity-gated.** CMS is signaling coverage tied to specific CV or kidney indications, with pure-weight indications remaining non-covered. Sponsors targeting a weight-only label face a structural reimbursement gap.\n- **IRA negotiation candidacy.** Semaglutide and tirzepatide are candidates for early IRA negotiation rounds (2027–2028). Once class-wide pricing benchmarks are set, all GLP-1 entrants — including pipeline molecules — inherit the resulting price ceiling.\n- **Commercial PA criteria are tightening.** Five of the recent payer commentaries documented PA criteria moving toward BMI ≥ 35 + comorbidity, not the original BMI ≥ 30.\n\n### Risk 3 — Regulatory labeling\n\n- **Adolescent indications** are under active FDA review with growth and developmental safety as the gating concern.\n- **Pregnancy labeling** is being revisited following postmarketing signal accumulation.\n- **Oral-form tolerability** has proven a structural ceiling (Pfizer's danuglipron exit, multiple Phase 2 stalls). Differentiated tolerability is the next competitive frontier — not raw potency.\n\n### Strategic implications\n\n1. **A weight-only label is no longer a viable terminal positioning.** Plan a comorbidity arm into any obesity Phase 3 from initiation, not after readout.\n2. **Engage CMS coverage analytics early.** The reimbursement signal is the binding constraint, not regulatory approval.\n3. **Tolerability is the differentiator.** GI tolerability profiles, dosing schedules, and adherence data will outweigh marginal efficacy gains in the 2026+ landscape.\n4. **Build pricing scenarios off IRA outcomes**, not list price. Pipeline entrants in 2027+ will be priced relative to whatever semaglutide and tirzepatide land at under negotiation.\n\n*Documents read: 24. Wall clock: 258 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

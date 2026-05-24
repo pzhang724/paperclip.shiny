@@ -1,0 +1,72 @@
+{
+  "id": "sample-clin-pdl1-cutoffs",
+  "title": "Compare how recent immunotherapy trials in NSCLC have defined the PD-L1 expression cutoff for eligibility",
+  "subtitle": "Cutoff trend and the assay each trial uses",
+  "audience_tags": ["trial design"],
+  "estimated_duration_seconds": 215,
+  "description": "An agent pulls recent NSCLC immunotherapy trials, extracts PD-L1 cutoffs and assays for eligibility and stratification, and synthesizes the trend across trials and indications.",
+  "metadata": {
+    "tool_calls": 5,
+    "documents_read": 17,
+    "wall_clock_seconds": 198
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "Compare how recent immunotherapy trials in NSCLC have defined the PD-L1 expression cutoff for eligibility. What's the trend, and which assay is each trial using?",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "I'll pull NSCLC immunotherapy trials from the last 5 years, extract eligibility PD-L1 thresholds and the IHC assay used, then look at how cutoffs have drifted over time and by treatment intent.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip search",
+      "args": "paperclip search \"NSCLC PD-L1 expression eligibility cutoff IHC assay phase 3\" -n 20",
+      "delay_ms": 800
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Found 19 documents  [s_pdl1_nsclc]\n\n  Sources: pmc(11), trials/us(6), fda(2)\n\n  KEYNOTE-024, KEYNOTE-042, KEYNOTE-189, KEYNOTE-407,\n  CheckMate-227, CheckMate-9LA, IMpower110, IMpower150,\n  EMPOWER-Lung 1, EMPOWER-Lung 3, POSEIDON, MARIPOSA,\n  CheckMate-816 (neoadjuvant), KEYNOTE-671 (perioperative),\n  AEGEAN (perioperative), TROPION-Lung01,\n  HARMONi-2, RATIONALE-303, KEYNOTE-799",
+      "delay_ms": 2200
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_pdl1_nsclc \\\n  \"reports the specific PD-L1 cutoff used for eligibility and the IHC assay/clone — exclude documents that only describe stratification post-randomization\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_pdl1_cut]\n\n  Kept 15 of 19 documents.",
+      "delay_ms": 1300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_pdl1_cut \\\n  \"Extract: (1) trial name, (2) treatment intent (1L metastatic, neoadjuvant, perioperative, etc.), (3) PD-L1 eligibility threshold (TPS or CPS), (4) IHC assay/clone, (5) primary endpoint.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 15/15 documents  [m_pdl1_cut]\n\n  ✓ KEYNOTE-024 (1L metastatic, 2016)\n    Cutoff: TPS ≥ 50%. Assay: 22C3. Primary: PFS, OS.\n\n  ✓ KEYNOTE-042 (1L metastatic, 2019)\n    Cutoff: TPS ≥ 1%. Assay: 22C3. Primary: OS by TPS strata.\n\n  ✓ KEYNOTE-189 (1L metastatic + chemo, 2018)\n    Cutoff: no PD-L1 floor — all-comer. Assay: 22C3 stratified.\n    Primary: OS, PFS.\n\n  ✓ CheckMate-227 (1L metastatic, 2019)\n    Cutoff: TPS ≥ 1% for primary analysis; < 1% in secondary.\n    Assay: 28-8. Primary: OS in TPS ≥ 1%.\n\n  ✓ IMpower110 (1L metastatic, 2020)\n    Cutoff: TC ≥ 1% by SP142, with co-primary at TC3/IC3 cutoff.\n    Primary: OS by PD-L1 status.\n\n  ✓ EMPOWER-Lung 1 (1L metastatic, 2021)\n    Cutoff: TPS ≥ 50%. Assay: 22C3. Primary: OS.\n\n  ✓ EMPOWER-Lung 3 (1L metastatic + chemo, 2022)\n    Cutoff: all-comer. Assay: 22C3 stratified. Primary: OS.\n\n  ✓ CheckMate-816 (neoadjuvant, 2022)\n    Cutoff: all-comer for eligibility. Assay: 28-8 stratified.\n    Primary: pCR, EFS.\n\n  ✓ KEYNOTE-671 (perioperative, 2023)\n    Cutoff: all-comer for eligibility, TPS ≥ 50% pre-specified\n    subgroup. Assay: 22C3. Primary: EFS, OS.\n\n  ✓ AEGEAN (perioperative, 2023)\n    Cutoff: all-comer for eligibility, TPS ≥ 1% pre-specified.\n    Assay: SP263. Primary: pCR, EFS.\n\n  ✓ TROPION-Lung01 (2L+, 2024)\n    Cutoff: TPS-stratified, no eligibility floor. Assay: 22C3.\n    Primary: PFS, OS.\n\n  ✓ MARIPOSA (1L EGFR-mutated, 2023)\n    PD-L1 not used as eligibility — EGFR mutation primary.\n\n  ✓ HARMONi-2 (1L PD-L1 selected, 2024)\n    Cutoff: TPS ≥ 1%. Assay: 22C3. Primary: PFS.\n\n  ✓ RATIONALE-303 (2L, 2021)\n    Cutoff: all-comer, TPS-stratified. Assay: SP263. Primary: OS.\n\n  ✓ KEYNOTE-799 (3L locally advanced, 2021)\n    Cutoff: all-comer. Assay: 22C3 stratified.",
+      "delay_ms": 3100
+    },
+    {
+      "type": "agent_thought",
+      "content": "Two clear trends: (1) eligibility floors have dropped from TPS ≥ 50% to TPS ≥ 1% to all-comer as we move from 1L mono-IO to combination and earlier-stage; (2) assay is 22C3 by majority but SP263 / 28-8 / SP142 each appear depending on sponsor — and the harmonization remains imperfect.",
+      "delay_ms": 1100
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## PD-L1 cutoffs in recent NSCLC immunotherapy trials\n\nAcross 15 recent trials, two patterns dominate: cutoffs have **drifted downward** as the indication has broadened from 1L monotherapy to combination and earlier-stage settings, and assay diversity persists despite a decade of harmonization effort.\n\n### Cutoff trend by treatment intent\n\n| Treatment intent | Modal cutoff | Examples |\n| --- | --- | --- |\n| 1L metastatic monotherapy | TPS ≥ 50% | KEYNOTE-024, EMPOWER-Lung 1 |\n| 1L metastatic, broader monotherapy | TPS ≥ 1% | KEYNOTE-042, CheckMate-227, HARMONi-2 |\n| 1L metastatic + chemotherapy | all-comer | KEYNOTE-189, EMPOWER-Lung 3 |\n| 2L+ | all-comer (TPS-stratified) | RATIONALE-303, TROPION-Lung01 |\n| Neoadjuvant | all-comer (TPS-stratified) | CheckMate-816 |\n| Perioperative | all-comer (subgroup pre-specified) | KEYNOTE-671, AEGEAN |\n\n### Assay landscape\n\n| Assay (clone) | Trials using it (this set) | Sponsor pattern |\n| --- | --- | --- |\n| **22C3 (Dako)** | 8 trials | Merck-led KEYNOTE series + select others |\n| **28-8 (Dako)** | 2 trials | BMS-led CheckMate series |\n| **SP263 (Ventana)** | 2 trials | AstraZeneca-led AEGEAN, RATIONALE-303 |\n| **SP142 (Ventana)** | 1 trial | Genentech / Roche IMpower110 |\n\nDespite the **Blueprint Project** harmonization effort, assays are not interchangeable in the marginal cases (e.g., TPS at 1–10% region), and trials anchored on different assays cannot be directly compared at the patient-selection level.\n\n### Direction of travel\n\nThree observations for trial design today:\n\n1. **Cutoff inflation has stopped.** TPS ≥ 50% as an eligibility floor is mostly retained for explicit positioning vs chemotherapy in 1L mono-IO; new trials in combination or peri-operative settings default to all-comer with TPS as a stratification covariate.\n2. **The eligibility ↔ subgroup distinction is now standard practice.** Trials use all-comer eligibility but pre-specify TPS-defined subgroups for FDA's expected efficacy questions.\n3. **Assay choice is still sponsor-driven.** Harmonization to 22C3 has not converged. A trial planning to read across other trials should pre-specify the assay-comparability analysis at protocol time, not at readout.\n\n### What an oncologist should ask of a new trial\n\n- What is the eligibility PD-L1 floor, and is it stratified or filtered?\n- Which assay (clone)?\n- If the assay is not 22C3, is there a planned assay-bridging analysis to allow comparison against the KEYNOTE-anchored evidence base?\n- Are subgroups pre-specified at TPS thresholds expected by FDA labeling?\n\n*Documents read: 17. Wall clock: 198 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

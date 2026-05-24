@@ -1,0 +1,67 @@
+{
+  "id": "sample-mm-sglt2-hf-safety",
+  "title": "Have any new safety signals been reported for SGLT2 inhibitors in heart-failure populations?",
+  "subtitle": "Postmarketing literature and recent FDA commentary",
+  "audience_tags": ["postmarketing"],
+  "estimated_duration_seconds": 210,
+  "description": "An agent searches the postmarketing pharmacovigilance and FDA literature for new SGLT2i safety signals in heart failure, filters to signal-relevant documents, and synthesizes what has changed since the original HF approvals.",
+  "metadata": {
+    "tool_calls": 5,
+    "documents_read": 15,
+    "wall_clock_seconds": 196
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "Have any new safety signals been reported for SGLT2 inhibitors in heart-failure populations? Summarize the postmarketing literature and any recent FDA commentary.",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "The HF approvals are recent (empa 2021, dapa 2020, sota 2023). I'll search postmarketing surveillance and FDA safety reviews for emergent signals, then compare against the trial-era safety profile.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip searches",
+      "args": "paperclip searches \\\n  \"SGLT2 inhibitor postmarketing surveillance heart failure safety\" \\\n  \"empagliflozin dapagliflozin ketoacidosis Fournier\" \\\n  \"SGLT2 hypotension acute kidney injury heart failure\" \\\n  -n 15",
+      "delay_ms": 900
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Running 3 searches in parallel...\n\n  [1/3] postmarketing surveillance HF → 11 results [s_sg_post]\n  [2/3] DKA / Fournier            → 9 results  [s_sg_dka]\n  [3/3] hypotension / AKI in HF   → 8 results  [s_sg_hd]\n\nMerged unique: 21  [s_sg_safety]\n  Sources: pmc(13), fda(5), medrxiv(2), trials/us(1)",
+      "delay_ms": 2300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_sg_safety \\\n  \"reports new safety signal evidence in HF populations post-approval — exclude documents only repeating pre-approval trial safety\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_sg_new]\n\n  Kept 12 of 21 documents.",
+      "delay_ms": 1300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_sg_new \\\n  \"Extract: (1) signal name, (2) reporting rate or incidence in HF population, (3) comparison to pre-approval trial estimate, (4) FDA / EMA position or labeling action if any, (5) clinical recommendation.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 12/12 documents  [m_sg_new]\n\n  ✓ Eur J Heart Fail 2024 — real-world HF safety analysis\n    Signal: euglycemic DKA. Rate in HF cohort 0.07/100PY,\n    similar to T2DM use; majority precipitated by acute\n    illness or fasting. No incremental HF-specific signal.\n\n  ✓ JACC HF 2024 — volume-related events in HFpEF\n    Signal: orthostatic hypotension in HFpEF + age ≥ 75\n    cohort. Rate 4.1% vs 2.0% on placebo. Recommends staged\n    diuretic-reduction protocol at SGLT2i initiation.\n\n  ✓ FDA Drug Safety Communication (Apr 2024)\n    Agency reviewed Fournier gangrene case-series across 2017–\n    2023. Adverse Event Reporting System (FAERS) accumulated\n    132 confirmed cases on SGLT2i. FDA judged signal already\n    captured in existing labeling; no new action required.\n\n  ✓ Lancet Diabetes Endo 2024 — AKI signal re-analysis\n    Pre-approval signal: small AKI increase. Post-approval HF\n    cohort: AKI rate actually lower than placebo when initiation\n    is paired with diuretic dose reduction. Signal reverses\n    with appropriate co-management.\n\n  ✓ Circ Heart Fail 2024 — discontinuation patterns\n    Up to 18% discontinuation rate in real-world HFpEF, largely\n    for genitourinary infection, volume depletion, or\n    'patient preference' rather than serious AE. Persistence\n    is the clinical-effectiveness bottleneck, not safety.\n\n  ✓ FDA AC briefing — SGLT2i across kidney + HF (Jan 2024)\n    Agency position: class is well-tolerated; the residual\n    signals (DKA, Fournier, lower-limb amputation for canagliflozin)\n    are already in labeling and have not expanded in HF use.\n    Volume management at initiation is the main practice gap.\n\n  ... [6 additional aligned reports]",
+      "delay_ms": 3000
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## SGLT2 inhibitor safety in heart-failure populations — current picture\n\nFour years into HF labeling, the postmarketing record is **largely reassuring**: no new class-level signals have emerged in HF populations, and the original trial-era safety concerns have not expanded in real-world use. The main clinical issue is **volume management at initiation**, not safety per se.\n\n### Signal-by-signal assessment\n\n| Signal | HF-population finding | Status |\n| --- | --- | --- |\n| Euglycemic DKA | 0.07/100PY in HF; no incremental HF-specific signal | Already labeled; no change |\n| Orthostatic hypotension | 4.1% vs 2.0% in HFpEF + age ≥ 75 | New emphasis on staged diuretic-reduction at initiation |\n| Fournier gangrene | 132 FAERS cases over 6 years; consistent with labeled rate | FDA reviewed Apr 2024 — no new action |\n| Acute kidney injury | Pre-approval signal reverses with diuretic co-management | Labeling guidance updated to emphasize titration |\n| Lower-limb amputation (canagliflozin) | No expansion in HF use | Class-level signal remains canagliflozin-specific |\n\n### FDA position (2024)\n\nThe January 2024 advisory committee briefing covered SGLT2 inhibitor use across kidney and HF indications. Agency position: *the class is well-tolerated; the residual signals are already in labeling and have not expanded in HF use.* The April 2024 Drug Safety Communication on Fournier gangrene reached the same conclusion — the signal exists, but the rate has not increased in HF use, and the existing labeling captures it.\n\n### The actual clinical issue\n\nThe **real-world discontinuation rate is the clinical-effectiveness concern**, not safety. Up to 18% of HFpEF patients discontinue SGLT2i in the real world, largely for genitourinary infection, volume depletion, or patient preference rather than serious adverse events. The persistence problem will limit population-level benefit even if the underlying drug is well-tolerated.\n\n### Practice recommendation\n\nThree items that the recent literature converges on:\n\n1. **Staged diuretic reduction at SGLT2i initiation**, particularly in HFpEF and age ≥ 75. The orthostatic hypotension signal is real and is the leading discontinuation reason.\n2. **Genitourinary infection counseling** at initiation; this drives a meaningful share of real-world discontinuations and is easy to address with patient education.\n3. **Volume status monitoring** in the first 4–6 weeks, with explicit re-titration of loop diuretic dose based on weight and orthostatic vitals.\n\n### Signals to keep watching\n\n- Real-world data in **HFpEF + frail elderly** populations is still maturing; the safety/effectiveness ratio may differ from the trial estimates.\n- Long-term **bone mineral density** signal has been re-raised in observational data but not confirmed in randomized follow-up.\n- Interaction with **GLP-1 receptor agonists** in patients with both indications is an emerging research question but not yet a safety signal.\n\n*Documents read: 15. Wall clock: 196 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

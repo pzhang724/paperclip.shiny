@@ -1,0 +1,84 @@
+{
+  "id": "sample-clin-jak-cv-safety",
+  "title": "What does the recent literature say about cardiovascular safety signals in JAK inhibitors for RA?",
+  "subtitle": "Signal evidence and how guidelines have responded",
+  "audience_tags": ["safety"],
+  "estimated_duration_seconds": 215,
+  "description": "An agent searches the post-ORAL Surveillance literature on JAK inhibitor CV safety in RA, pulls FDA labeling actions and guideline updates, and synthesizes the current clinical position.",
+  "metadata": {
+    "tool_calls": 5,
+    "documents_read": 16,
+    "wall_clock_seconds": 201
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "What does the recent literature say about cardiovascular safety signals in JAK inhibitors used for rheumatoid arthritis, and how have guidelines responded?",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "The pivotal evidence here is ORAL Surveillance (2022). I'll start there, then trace forward to subsequent meta-analyses, FDA labeling actions, and EULAR / ACR guideline updates.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip search",
+      "args": "paperclip search \"JAK inhibitor cardiovascular MACE rheumatoid arthritis ORAL Surveillance\" -n 20",
+      "delay_ms": 800
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Found 18 documents  [s_jak_cv]\n\n  Sources: pmc(11), fda(4), medrxiv(2), trials/us(1)\n\n  1. NEJM 2022 — ORAL Surveillance primary publication (Ytterberg)\n  2. Ann Rheum Dis 2023 — JAK class CV meta-analysis (Kerschbaumer)\n  3. FDA Drug Safety Communication — JAK inhibitor boxed warning (Sep 2021)\n  4. EULAR 2023 recommendations — JAK risk-stratified use\n  5. ACR Open Rheum 2024 — real-world JAK CV registry analysis\n  6. Lancet Rheum 2024 — pooled tofa / bari / upa / filgo MACE\n  7. RMD Open 2024 — risk-factor-stratified subgroup analyses\n  8. FDA Multi-Disc Review — upadacitinib RA label update\n  ... [10 more]",
+      "delay_ms": 2200
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_jak_cv \\\n  \"contains quantitative CV outcome data (HR, IR, or absolute risk) OR is a major guideline / labeling document\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_jak_cv_q]\n\n  Kept 11 of 18 documents.",
+      "delay_ms": 1300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_jak_cv_q \\\n  \"Extract: (1) drug/class studied, (2) MACE definition, (3) hazard ratio or rate vs comparator, (4) risk-factor population, (5) the document's clinical/regulatory recommendation if any.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 11/11 documents  [m_jak_cv]\n\n  ✓ ORAL Surveillance — Ytterberg, NEJM 2022\n    Drug: tofacitinib 5mg + 10mg BID. Comparator: TNF inhibitor.\n    MACE HR: 1.33 (95% CI 0.91–1.94). In age ≥ 65 + cardio risk,\n    HR 1.43 with broader CIs. Did not meet non-inferiority margin\n    of 1.8 for MACE.\n\n  ✓ Kerschbaumer meta-analysis, Ann Rheum Dis 2023\n    Pooled tofa/bari/upa/filgo across 38 RCTs. MACE IRR 1.04\n    (95% CI 0.71–1.51) vs placebo in short-term RCT data —\n    null overall. Authors caution this contrasts with the\n    long-term ORAL Surveillance signal.\n\n  ✓ FDA Drug Safety Communication (Sep 2021)\n    Boxed warning added to tofacitinib, baricitinib, upadacitinib\n    for MACE, malignancy, thrombosis, mortality. Restricts use\n    to patients with inadequate response or intolerance to TNF\n    inhibitors.\n\n  ✓ EULAR 2023 recommendations\n    JAK use in RA recommended only after risk stratification:\n    age ≥ 65, smoking history, other CV risk factors, malignancy\n    history, VTE history. Class-wide caution rather than\n    molecule-specific differentiation.\n\n  ✓ Lancet Rheum 2024 — pooled class analysis\n    Class-level MACE rate 0.97/100PY on JAK vs 0.71/100PY on\n    TNFi. Differential concentrated in age ≥ 65 + CV risk\n    subgroup (rate 1.81 vs 0.92). Below age 65 with no CV\n    risk, no class signal.\n\n  ✓ Real-world registry analysis (ACR 2024)\n    Adjusted MACE HR 1.12 (95% CI 0.94–1.34) in clinically-used\n    populations vs TNFi. Effect largely absorbed by\n    risk-stratified prescribing post-2021.\n\n  ✓ Risk-factor-stratified subgroup analyses (RMD 2024)\n    Differential safety profile by subgroup: in low-risk\n    populations, JAKi is non-inferior to TNFi on MACE; in\n    high-risk, JAKi shows increased risk consistent with the\n    ORAL Surveillance signal.\n\n  ... [5 more aligned with the same picture]",
+      "delay_ms": 3100
+    },
+    {
+      "type": "agent_thought",
+      "content": "The signal is real but stratified — concentrated in age ≥ 65 + CV risk. Guidelines have responded with risk-stratified prescribing rather than class withdrawal. Let me also pull the most recent FDA labeling action to confirm.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip cat",
+      "args": "paperclip cat /papers/fda/us/upadacitinib_label_update/meta.json | jq '.boxed_warning_text'",
+      "delay_ms": 600
+    },
+    {
+      "type": "tool_output",
+      "format": "code",
+      "content": "\"Patients 50 years of age and older with at least one cardiovascular risk factor treated with another JAK inhibitor for rheumatoid arthritis had a higher rate of all-cause mortality, including sudden cardiovascular death, MACE (defined as cardiovascular death, non-fatal myocardial infarction, and non-fatal stroke), thrombosis, and overall malignancy compared with those treated with TNF blockers.\"",
+      "delay_ms": 1000
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## JAK inhibitor cardiovascular safety in RA — current clinical picture\n\nThe **ORAL Surveillance** signal (Ytterberg, NEJM 2022) reshaped the JAK inhibitor positioning in RA. Subsequent meta-analyses and registry data confirm the signal is **real but stratified** — concentrated in age ≥ 65 with cardiovascular risk factors — rather than uniform across the patient population.\n\n### Quantitative picture\n\n| Source | Population | MACE result |\n| --- | --- | --- |\n| ORAL Surveillance (NEJM 2022) | RA, age ≥ 50 + 1 CV RF | HR 1.33 (95% CI 0.91–1.94) vs TNFi; did not meet NI margin 1.8 |\n| Lancet Rheum 2024 (class meta) | Age ≥ 65 + CV risk | Rate 1.81 vs 0.92 per 100PY (TNFi) |\n| Lancet Rheum 2024 (class meta) | Age < 65, no CV risk | No class signal |\n| Real-world registry (ACR 2024) | Mixed, post-2021 stratified prescribing | Adjusted HR 1.12 (95% CI 0.94–1.34) |\n\n### Regulatory response\n\n- **FDA (Sep 2021)**: boxed warning added class-wide (tofacitinib, baricitinib, upadacitinib) for MACE, malignancy, thrombosis, mortality. Use restricted to inadequate response or intolerance to TNF inhibitors.\n- **Upadacitinib label** explicitly extrapolates the tofacitinib finding to the class: *patients 50 years of age and older with at least one cardiovascular risk factor treated with another JAK inhibitor for rheumatoid arthritis had a higher rate of all-cause mortality... and MACE.*\n\n### Guideline response\n\n- **EULAR 2023**: JAK use recommended only after risk stratification (age ≥ 65, smoking history, other CV risk factors, malignancy history, VTE history).\n- The **class-wide** framing is deliberate — guidelines do not differentiate between molecules even where head-to-head trial data is limited.\n\n### Bottom line for prescribers\n\nThe modern clinical position has converged on three points:\n\n1. **Risk-stratify before prescribing JAKi for RA.** Patients age ≥ 65 with CV risk should be on TNFi or alternative MoA unless those have failed.\n2. **In low-risk populations**, the class signal does not replicate convincingly — JAKi remains a reasonable option after methotrexate.\n3. **The signal is class-wide**, not molecule-specific. Switching tofacitinib → baricitinib → upadacitinib does not mitigate the CV concern.\n\nA prescribing oncologist or rheumatologist treating an at-risk patient should explicitly document the risk-stratification reasoning in the chart, both for clinical reasons and increasingly for medico-legal ones post-2022.\n\n*Documents read: 16. Wall clock: 201 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

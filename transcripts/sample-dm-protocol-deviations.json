@@ -1,0 +1,67 @@
+{
+  "id": "sample-dm-protocol-deviations",
+  "title": "What protocol deviation patterns have sponsors reported in recent oncology pivotal trials?",
+  "subtitle": "How they are typically adjudicated at database lock",
+  "audience_tags": ["data quality"],
+  "estimated_duration_seconds": 195,
+  "description": "An agent pulls recent oncology pivotal trial publications and FDA reviews, filters to those reporting deviation taxonomies, and extracts the deviation categories sponsors most commonly classify as 'major' vs 'minor'.",
+  "metadata": {
+    "tool_calls": 4,
+    "documents_read": 14,
+    "wall_clock_seconds": 184
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "What protocol deviation patterns have sponsors reported in recent oncology pivotal trials, and how are they typically adjudicated at database lock?",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "Two angles — sponsor-reported deviation categories from publications and supplements, and FDA reviewer commentary on the adjudication process. I'll pull both, then extract the taxonomy.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip search",
+      "args": "paperclip search \"protocol deviation oncology pivotal database lock adjudication\" -n 20",
+      "delay_ms": 800
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Found 17 documents  [s_dev_oncol]\n\n  Sources: pmc(9), fda(6), trials/us(2)\n\n  1. JCO 2024 — KEYNOTE-522 deviation summary appendix\n  2. NEJM 2023 — IMpassion132 deviation reporting\n  3. FDA Statistical Review — BLA 125514/S-110 (deviation impact)\n  4. JAMA Oncol 2024 — CodeBreaK-200 ITT integrity analysis\n  5. FDA Multi-Disc Review — BLA 761097 (deviation adjudication discussion)\n  6. JCO 2023 — POLO trial deviation taxonomy paper\n  7. NEJM 2024 — DESTINY-Lung02 ITT and PP comparison\n  8. FDA AC briefing — deviation reporting standards (2023)\n  ... [9 more]",
+      "delay_ms": 2100
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_dev_oncol \\\n  \"reports a structured deviation taxonomy with categories, counts, and major/minor classification — exclude documents that only mention deviations in passing\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_dev_taxo]\n\n  Kept 9 of 17 documents.",
+      "delay_ms": 1300
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_dev_taxo \\\n  \"Extract: (1) deviation categories reported, (2) modal frequency per category, (3) which categories were classified 'major' (excludable from PP set) vs 'minor', (4) any FDA reviewer commentary on the adjudication.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 9/9 documents  [m_dev_taxo]\n\n  ✓ KEYNOTE-522 (pembro / neoadjuvant TNBC, 2024)\n    Categories: eligibility violation (1.8%), informed consent\n    timing (0.6%), prohibited concomitant medication (3.2%),\n    visit window violation (8.4% — minor), study drug dosing\n    error (1.1%), missed primary endpoint assessment (0.9%).\n    Major: eligibility, consent, prohibited conmed,\n    dose-affecting errors. PP set excluded ~6% of ITT.\n\n  ✓ CodeBreaK-200 (sotorasib / KRAS, 2024)\n    Categories: eligibility (2.1%), GCP non-compliance (0.4%),\n    visit windows (11.2%), endpoint timing (1.7%), randomization\n    integrity (0.2%). Major classification: eligibility, GCP,\n    randomization integrity. FDA reviewer flagged the\n    randomization-integrity events as 'requires individual\n    case review, not blanket exclusion.'\n\n  ✓ DESTINY-Lung02 (T-DXd, 2024)\n    Major deviations clustered in study drug dosing (1.9%) and\n    biomarker eligibility verification (1.4%). FDA review:\n    'biomarker eligibility errors that would not have affected\n    randomization stratum should remain in ITT.'\n\n  ✓ FDA AC briefing — deviation reporting standards (2023)\n    Agency position: sponsors should pre-specify deviation\n    categories in the SAP, with explicit major/minor mapping\n    that does not change post-database-lock. 'Post-hoc\n    re-classification undermines the integrity of the analysis.'\n\n  ✓ POLO (olaparib / pancreatic maint, 2023)\n    Categories largely consistent with KN-522. Notably added\n    a 'patient-reported outcome completeness' deviation, classed\n    minor.\n\n  ... [4 additional trials with consistent taxonomies]",
+      "delay_ms": 2800
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## Protocol deviation patterns in recent oncology pivotal trials\n\nAcross nine recent pivotal trials (2023–2024) with full deviation appendices, sponsors converge on a stable taxonomy of six to eight categories, with consistent major/minor mapping and a typical PP-set exclusion of 4–8% of the ITT population.\n\n### Common deviation taxonomy\n\n| Category | Typical frequency | Usually classified as |\n| --- | --- | --- |\n| Visit window violations | 6–12% | Minor |\n| Prohibited concomitant medication | 2–4% | Major |\n| Eligibility violation (post-randomization detection) | 1–3% | Major |\n| Study drug dosing errors | 1–2% | Major (if affecting cumulative dose) |\n| GCP / informed consent timing | 0.4–0.8% | Major |\n| Endpoint assessment timing / completeness | 1–2% | Mixed — minor unless primary endpoint missed |\n| Randomization integrity | < 0.5% | Major (case-by-case) |\n| Biomarker re-verification | 1–2% | Mixed — depends on stratification impact |\n\n### How FDA expects adjudication to be handled\n\nThree principles emerge from reviewer commentary and the 2023 AC briefing:\n\n1. **Pre-specify the taxonomy in the SAP.** \"Post-hoc re-classification undermines the integrity of the analysis.\" Sponsors that change major/minor mapping after lock should expect reviewer pushback.\n2. **Major ≠ automatic exclusion from ITT.** FDA reviewers across multiple recent reviews have explicitly cautioned against blanket exclusion. The DESTINY-Lung02 review captured the position: *biomarker eligibility errors that would not have affected randomization stratum should remain in ITT.*\n3. **Randomization integrity events require individual case review.** Even at very low rates (< 0.5%), these are scrutinized at the individual-patient level rather than aggregated.\n\n### What sponsors should pre-specify\n\nFor a new oncology pivotal protocol entering lock:\n\n- A version-controlled deviation category list in the SAP\n- Explicit decision tree for major/minor classification\n- A separate decision tree for ITT vs PP inclusion (the two questions are related but not identical)\n- A documented process for blinded adjudication of edge cases prior to unblinding\n\nDeviation appendices are now a *standard* component of the regulatory dossier in oncology, and the consistency of the recent reporting suggests the field has converged on a workable taxonomy — sponsors deviating from it should have a documented reason.\n\n*Documents read: 14. Wall clock: 184 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

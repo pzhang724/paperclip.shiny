@@ -1259,7 +1259,7 @@
   },
   "files": {
     ".Rprofile": {
-      "checksum": "29ff3bd1bdd5b5fa68df00b340728827"
+      "checksum": "f4b7f7dd0d3723aceb1d0f379ea49a53"
     },
     "app.R": {
       "checksum": "8bdffc78214da931940d86215e3334e4"
@@ -1274,7 +1274,7 @@
       "checksum": "301b1d02778f88e2f94c5744db4e5db0"
     },
     "R/server.R": {
-      "checksum": "abe59a2323e43ffe125d0d3ce722fc81"
+      "checksum": "b07e1b084808e05bb754ea49326bfbbc"
     },
     "R/ui.R": {
       "checksum": "f911a123680b6c1530465ace3eba9c7d"
@@ -1285,11 +1285,14 @@
     "renv.lock": {
       "checksum": "b7eb15e662d40e661ad3e99d55457628"
     },
+    "SAMPLE_QUESTIONS.md": {
+      "checksum": "9b3336a6b005a7fed5ffc80ce76b77d4"
+    },
     "transcripts/_index.json": {
-      "checksum": "9bf5b10102db4adddbad04bdd7bdbe4f"
+      "checksum": "f1009be4bad672cfd0a2906d71bfe3e0"
     },
     "transcripts/01-estimand-trend.json": {
-      "checksum": "cc23f01744ec5c084c1582d4c5891414"
+      "checksum": "292b5dc66bc7250f41c0f081bcae087d"
     },
     "transcripts/02-pd-l1-fda-deep-dive.json": {
       "checksum": "9dd1bfe607c0419d73f2972336e7fab8"
@@ -1297,11 +1300,50 @@
     "transcripts/03-glp-1-landscape.json": {
       "checksum": "fac2ef3ae539c01a3ddf3c70c199ec16"
     },
+    "transcripts/sample-biostat-nph.json": {
+      "checksum": "dfbad4af2fa9d09f1623c622157ed251"
+    },
+    "transcripts/sample-biostat-rare-disease-n.json": {
+      "checksum": "6b4fd9706f7f8f429825b49b12e9afd6"
+    },
+    "transcripts/sample-clin-car-t-durability.json": {
+      "checksum": "4a533aa748837425fe3be1ad81754b52"
+    },
+    "transcripts/sample-clin-jak-cv-safety.json": {
+      "checksum": "6bbb1411a71f284d2017de54d3caf3a7"
+    },
+    "transcripts/sample-clin-pdl1-cutoffs.json": {
+      "checksum": "311cf31a6702a704c56acb9695ffbd88"
+    },
+    "transcripts/sample-cmo-accelerated-approval.json": {
+      "checksum": "79e3c242a45b9df628a43e92a6042d92"
+    },
+    "transcripts/sample-cmo-obesity-pipeline-risk.json": {
+      "checksum": "12ddb0c3a38855d8670bf30b6cef480c"
+    },
+    "transcripts/sample-dm-ae-recoding.json": {
+      "checksum": "7bb63d312a4fd823bd717eb49aeff0cd"
+    },
+    "transcripts/sample-dm-protocol-deviations.json": {
+      "checksum": "e88e2bc94f14c8d21f41ff3334dfa54a"
+    },
+    "transcripts/sample-mm-btk-sae.json": {
+      "checksum": "c4be4c3a72c31e192f30d28c128da3d1"
+    },
+    "transcripts/sample-mm-sglt2-hf-safety.json": {
+      "checksum": "3061d04a05403925922cf82999c5bb8b"
+    },
+    "transcripts/sample-sp-adam-defxml.json": {
+      "checksum": "07cd711319a932899c1be7aeea320d02"
+    },
+    "transcripts/sample-sp-tte-derivation.json": {
+      "checksum": "a3e1de3adaaf4ad6156f860f1883f2aa"
+    },
     "www/replay.js": {
       "checksum": "f6111e4af394c15739f51952ba6efff8"
     },
     "www/styles.css": {
-      "checksum": "9e9aaacce914a4c83eda2917d22e845a"
+      "checksum": "738ba82ef96086c01a9d180187cabb40"
     }
   },
   "users": null

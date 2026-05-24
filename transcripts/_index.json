@@ -1,25 +1,161 @@
 {
+  "roles": [
+    "Chief Medical Officer",
+    "Data Manager",
+    "Clinician",
+    "Medical Monitoring",
+    "Biostatistician",
+    "Statistical Programmer"
+  ],
   "sessions": [
     {
+      "id": "03-glp-1-landscape",
+      "role": "Chief Medical Officer",
+      "status": "recorded",
+      "title": "Build a competitive landscape for GLP-1 receptor agonists",
+      "subtitle": "Parallel searches across literature, trials, and FDA",
+      "audience_tags": ["competitive intel"],
+      "estimated_duration_seconds": 300
+    },
+    {
+      "id": "sample-cmo-accelerated-approval",
+      "role": "Chief Medical Officer",
+      "status": "recorded",
+      "title": "How is the FDA's bar for accelerated approval in oncology shifting?",
+      "subtitle": "Recent advisory committee briefings and reviewer commentary",
+      "audience_tags": ["regulatory strategy"],
+      "estimated_duration_seconds": 220
+    },
+    {
+      "id": "sample-cmo-obesity-pipeline-risk",
+      "role": "Chief Medical Officer",
+      "status": "recorded",
+      "title": "What strategic risks should we anticipate in the obesity drug class over the next 24 months?",
+      "subtitle": "Pipeline density, payer pressure, and emerging label restrictions",
+      "audience_tags": ["portfolio strategy"],
+      "estimated_duration_seconds": 270
+    },
+
+    {
+      "id": "sample-dm-protocol-deviations",
+      "role": "Data Manager",
+      "status": "recorded",
+      "title": "What protocol deviation patterns have sponsors reported in recent oncology pivotal trials?",
+      "subtitle": "How they are typically adjudicated at database lock",
+      "audience_tags": ["data quality"],
+      "estimated_duration_seconds": 195
+    },
+    {
+      "id": "sample-dm-ae-recoding",
+      "role": "Data Manager",
+      "status": "recorded",
+      "title": "How are sponsors handling adverse-event recoding between database lock and the safety update report?",
+      "subtitle": "Recent examples of the recode workflow",
+      "audience_tags": ["safety data"],
+      "estimated_duration_seconds": 200
+    },
+
+    {
+      "id": "sample-clin-jak-cv-safety",
+      "role": "Clinician",
+      "status": "recorded",
+      "title": "What does the recent literature say about cardiovascular safety signals in JAK inhibitors for RA?",
+      "subtitle": "Signal evidence and how guidelines have responded",
+      "audience_tags": ["safety"],
+      "estimated_duration_seconds": 215
+    },
+    {
+      "id": "sample-clin-pdl1-cutoffs",
+      "role": "Clinician",
+      "status": "recorded",
+      "title": "Compare how recent immunotherapy trials in NSCLC have defined the PD-L1 expression cutoff for eligibility",
+      "subtitle": "Cutoff trend and the assay each trial uses",
+      "audience_tags": ["trial design"],
+      "estimated_duration_seconds": 215
+    },
+    {
+      "id": "sample-clin-car-t-durability",
+      "role": "Clinician",
+      "status": "recorded",
+      "title": "Pull recent evidence on the durability of remission in CAR-T therapy for r/r large B-cell lymphoma",
+      "subtitle": "The realistic five-year picture",
+      "audience_tags": ["efficacy"],
+      "estimated_duration_seconds": 230
+    },
+
+    {
+      "id": "sample-mm-sglt2-hf-safety",
+      "role": "Medical Monitoring",
+      "status": "recorded",
+      "title": "Have any new safety signals been reported for SGLT2 inhibitors in heart-failure populations?",
+      "subtitle": "Postmarketing literature and recent FDA commentary",
+      "audience_tags": ["postmarketing"],
+      "estimated_duration_seconds": 210
+    },
+    {
+      "id": "sample-mm-btk-sae",
+      "role": "Medical Monitoring",
+      "status": "recorded",
+      "title": "Compare the serious adverse event profile across the three approved BTK inhibitors",
+      "subtitle": "Grouped by event category and pivotal trial",
+      "audience_tags": ["safety comparison"],
+      "estimated_duration_seconds": 215
+    },
+
+    {
       "id": "01-estimand-trend",
+      "role": "Biostatistician",
+      "status": "recorded",
       "title": "How often do FDA documents mention 'estimand' over time?",
       "subtitle": "Quantitative regulatory trend analysis",
-      "audience_tags": ["biostatistician", "regulatory"],
+      "audience_tags": ["regulatory trend"],
       "estimated_duration_seconds": 180
     },
     {
       "id": "02-pd-l1-fda-deep-dive",
+      "role": "Biostatistician",
+      "status": "recorded",
       "title": "What statistical concerns has FDA raised about PD-L1 inhibitors?",
       "subtitle": "Reviewer-language extraction from BLA review documents",
-      "audience_tags": ["biostatistician", "medical writer", "regulatory"],
+      "audience_tags": ["FDA reviewer concerns"],
       "estimated_duration_seconds": 240
     },
     {
-      "id": "03-glp-1-landscape",
-      "title": "Build a competitive landscape for GLP-1 receptor agonists",
-      "subtitle": "Parallel searches across literature, trials, and FDA",
-      "audience_tags": ["clinical operations", "medical writer", "regulatory"],
-      "estimated_duration_seconds": 300
+      "id": "sample-biostat-nph",
+      "role": "Biostatistician",
+      "status": "recorded",
+      "title": "What approaches has FDA accepted for non-proportional hazards in immuno-oncology survival analyses?",
+      "subtitle": "Cite the reviewer language",
+      "audience_tags": ["methods"],
+      "estimated_duration_seconds": 215
+    },
+    {
+      "id": "sample-biostat-rare-disease-n",
+      "role": "Biostatistician",
+      "status": "recorded",
+      "title": "Summarize how sponsors have justified sample size in recent pivotal trials for rare-disease indications",
+      "subtitle": "Especially where prior incidence data is sparse",
+      "audience_tags": ["sample size"],
+      "estimated_duration_seconds": 215
+    },
+
+    {
+      "id": "sample-sp-adam-defxml",
+      "role": "Statistical Programmer",
+      "status": "recorded",
+      "title": "What analysis dataset and define-XML issues have FDA reviewers cited in the last two years?",
+      "subtitle": "Grouped by issue type",
+      "audience_tags": ["submissions"],
+      "estimated_duration_seconds": 200
+    },
+    {
+      "id": "sample-sp-tte-derivation",
+      "role": "Statistical Programmer",
+      "status": "recorded",
+      "title": "How are sponsors deriving time-to-event variables when patients have multiple intercurrent events?",
+      "subtitle": "Recent examples aligning derivation to the stated estimand",
+      "audience_tags": ["derivations"],
+      "estimated_duration_seconds": 215
     }
   ]
 }

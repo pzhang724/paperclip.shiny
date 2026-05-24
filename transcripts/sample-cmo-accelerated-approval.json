@@ -1,0 +1,77 @@
+{
+  "id": "sample-cmo-accelerated-approval",
+  "title": "How is the FDA's bar for accelerated approval in oncology shifting?",
+  "subtitle": "Recent advisory committee briefings and reviewer commentary",
+  "audience_tags": ["regulatory strategy"],
+  "estimated_duration_seconds": 220,
+  "description": "An agent pulls recent FDA advisory committee briefings and statistical reviews discussing accelerated approval, filters to those with material policy commentary, and extracts the position FDA is taking on confirmatory evidence timing.",
+  "metadata": {
+    "tool_calls": 5,
+    "documents_read": 11,
+    "wall_clock_seconds": 207
+  },
+  "events": [
+    {
+      "type": "user_query",
+      "content": "How is the FDA's bar for accelerated approval in oncology shifting? Pull recent advisory committee briefings and reviewer commentary and tell me what the agency is signaling about confirmatory evidence.",
+      "delay_ms": 0
+    },
+    {
+      "type": "agent_thought",
+      "content": "I'll start with FDA advisory committee briefings from 2021 onward — that's when ODAC began holding the public revisits of dangling accelerated approvals. Then I'll filter to documents with material policy commentary and extract the reviewer position.",
+      "delay_ms": 900
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip search",
+      "args": "paperclip search \"accelerated approval confirmatory withdraw oncology\" -s fda -n 15",
+      "delay_ms": 800
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Found 13 documents  [s_aa_oncol]\n\n  1. Advisory Committee Briefing — ODAC accelerated approval revisits (Apr 2021)\n  2. Advisory Committee Briefing — ODAC dangling AA review (Jun 2024)\n  3. Statistical Review — BLA 125377/S-110 (atezolizumab, urothelial AA withdrawal)\n  4. Multi-Disciplinary Review — BLA 761041/S-018 (avelumab, gastric)\n  5. Advisory Committee Briefing — surrogate endpoints in hematology (Sep 2022)\n  6. Statistical Review — BLA 761097/S-027 (cemiplimab, CSCC confirmatory)\n  7. Project Confirm — FDA accelerated approval status page summary (Mar 2024)\n  8. ODAC briefing — TROP-2 ADC accelerated approval discussion (Mar 2024)\n  9. Clinical Review — NDA 215358 (KRAS G12C, AA conversion)\n 10. ODAC briefing — single-arm trial registration in 2024 (Feb 2024)\n 11. Statistical Review — BLA 125514/S-128 (pembro, MSI-H tumor agnostic)\n 12. Project FrontRunner — FDA pre-pivotal evidence discussions (2023)\n 13. Multi-Disciplinary Review — BLA 761346/S-007 (PD-1, NSCLC AA → full)",
+      "delay_ms": 2400
+    },
+    {
+      "type": "agent_thought",
+      "content": "Thirteen documents, but the policy-shaping ones are the ODAC briefings and the Project Confirm / FrontRunner summaries. Let me filter to those.",
+      "delay_ms": 900
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip filter",
+      "args": "paperclip filter --from s_aa_oncol \\\n  \"makes substantive policy commentary about timing, design, or evidentiary bar of accelerated approval — exclude single-product reviews unless they articulate broader principles\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Filter complete  [s_aa_policy]\n\n  Kept 7 of 13 documents (policy-shaping commentary).\n  Dropped 6 single-product reviews without broader principle statements.",
+      "delay_ms": 1500
+    },
+    {
+      "type": "tool_call",
+      "tool_name": "paperclip map",
+      "args": "paperclip map --from s_aa_policy \\\n  \"What is the FDA's position on (a) timing of confirmatory trial start relative to AA, (b) acceptability of single-arm trials, (c) surrogate endpoint validation, and (d) the consequences of negative confirmatory readouts? Quote the agency where it's striking.\"",
+      "delay_ms": 700
+    },
+    {
+      "type": "tool_output",
+      "format": "text",
+      "content": "Map complete: 7/7 documents  [m_aa_policy]\n\n  ✓ ODAC accelerated approval revisits (Apr 2021)\n    Sets the framing for the modern era: \"confirmatory trials\n    should be underway, not merely planned, at the time of\n    accelerated approval.\"\n\n  ✓ ODAC dangling AA review (Jun 2024)\n    Six approvals reviewed; three voluntary withdrawals. ODAC\n    voted to require explicit confirmatory-trial milestones at\n    AA grant, with FDA empowered to begin formal withdrawal\n    proceedings if milestones slip > 12 months.\n\n  ✓ ODAC briefing — surrogate endpoints in hematology (Sep 2022)\n    \"PFS and MRD negativity remain valid surrogates in many\n    hematologic malignancies, but the strength of the\n    surrogate-outcome relationship varies by line of therapy\n    and indication.\" Agency declines a single class-wide bar.\n\n  ✓ ODAC briefing — TROP-2 ADC discussion (Mar 2024)\n    Agency raised concern about a single-arm trial as the basis\n    for a tumor-agnostic claim in a setting where randomized\n    evidence was feasible. \"The single-arm design here is a\n    choice, not a necessity.\"\n\n  ✓ Project Confirm summary (Mar 2024)\n    71% of AAs converted to full approval; 16% withdrawn; 13%\n    still pending. Mean time from AA to conversion: 4.0 years.\n    FDA explicitly identifies the 4-year mean as too long.\n\n  ✓ ODAC briefing — single-arm trial registration (Feb 2024)\n    \"Single-arm registrational trials should be reserved for\n    settings where randomization is genuinely infeasible —\n    rare disease, refractory populations without standard of\n    care, or where the contribution-of-component question\n    cannot otherwise be resolved.\"\n\n  ✓ Project FrontRunner discussions (2023)\n    FDA proposes seamless protocols that prespecify the\n    confirmatory phase at the time of AA enrollment. Sponsors\n    are encouraged to begin Phase 3 enrollment before AA.",
+      "delay_ms": 3200
+    },
+    {
+      "type": "agent_thought",
+      "content": "Four signals worth structuring: confirmatory trials underway at AA, randomized design as default, surrogate-by-setting nuance, and explicit milestones with withdrawal teeth.",
+      "delay_ms": 1000
+    },
+    {
+      "type": "final_synthesis",
+      "format": "markdown",
+      "content": "## How FDA's accelerated approval bar is shifting in oncology\n\nThe agency has moved from a permissive posture (1992–2018) into an explicit framework with milestones, default randomized design, and faster withdrawal mechanics. Four signals dominate the 2021–2024 record.\n\n### 1. Confirmatory trials must be underway, not planned\n\nThe 2021 ODAC briefing crystallized the modern position: *\"confirmatory trials should be underway, not merely planned, at the time of accelerated approval.\"* The 2023 **Project FrontRunner** discussions go further — seamless protocols that prespecify the confirmatory phase at AA enrollment.\n\n### 2. Randomized design is now the default\n\nThe February 2024 ODAC was explicit: single-arm registrational trials are reserved for genuinely infeasible randomization (rare disease, refractory populations without SoC, or contribution-of-component questions). The March 2024 TROP-2 ADC discussion captured the tone — *\"the single-arm design here is a choice, not a necessity.\"*\n\n### 3. Surrogate validity is setting-specific, not class-wide\n\nThe September 2022 ODAC on hematology surrogates **declined a class-wide bar**: PFS and MRD remain valid in many indications, but the surrogate-outcome relationship varies by line of therapy. The agency wants sponsors to demonstrate, not assume, the surrogate–OS relationship for their setting.\n\n### 4. Milestones with withdrawal teeth\n\nFDORA gave the agency formal withdrawal authority; the June 2024 ODAC operationalized it. Expect:\n\n- Explicit confirmatory-trial milestones at AA grant\n- Formal withdrawal proceedings if milestones slip by more than 12 months\n- Mean AA-to-conversion time (currently 4.0 years per **Project Confirm**) under active downward pressure\n\n### What this means strategically\n\nA sponsor planning an AA-track program should now budget for:\n\n1. **Phase 3 enrollment before AA submission**, not after.\n2. **Pre-agreement on the surrogate–OS relationship** for the specific indication and line of therapy, with sensitivity analyses planned upfront.\n3. **Randomized design as the starting position**, with explicit justification if proposing single-arm.\n4. **Pre-negotiated milestones** with FDA on confirmatory trial readouts.\n\nThe AA pathway has not narrowed — but the *informal* AA pathway has. Sponsors that approach AA as a single-arm shortcut to be confirmed later are likely to find the conversation harder in 2025 than it was in 2018.\n\n*Documents read: 11. Wall clock: 207 seconds.*",
+      "delay_ms": 1500
+    }
+  ]
+}

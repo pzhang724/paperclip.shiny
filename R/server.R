@@ -37,11 +37,21 @@ app_server <- function(input, output, session) {
   })
 
   output$session_list <- renderUI({
-    htmltools::tagList(
-      lapply(sessions_meta, function(meta) {
-        session_card(meta, selected = identical(meta$id, state$selected_id))
-      })
-    )
+    roles <- index$roles
+    if (is.null(roles) || length(roles) == 0) {
+      roles <- unique(vapply(sessions_meta, function(m) m$role %||% "Other", character(1)))
+    }
+    role_groups <- lapply(roles, function(r) {
+      group <- Filter(function(m) identical(m$role %||% "", r), sessions_meta)
+      if (length(group) == 0) return(NULL)
+      htmltools::tagList(
+        htmltools::tags$div(class = "picker-role-header", r),
+        lapply(group, function(meta) {
+          session_card(meta, selected = identical(meta$id, state$selected_id))
+        })
+      )
+    })
+    htmltools::tagList(role_groups)
   })
 
   output$viewport_title <- renderText({
