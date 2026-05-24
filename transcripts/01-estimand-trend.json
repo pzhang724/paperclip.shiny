@@ -13,7 +13,7 @@
   "events": [
     {
       "type": "user_query",
-      "content": "Using SQL, count how many FDA documents per year mention 'estimand' or 'intercurrent event' from 2017 onward. Then pull 2 recent examples and explain how each frames the estimand discussion.",
+      "content": "How often do FDA documents mention 'estimand' or 'intercurrent event' over time? Show the year-by-year trend from 2017 onward, then pull two recent examples and explain how each frames the estimand discussion.",
       "delay_ms": 0
     },
     {
